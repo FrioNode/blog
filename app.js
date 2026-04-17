@@ -4,7 +4,6 @@ const path = require('path');
 const blogRoutes = require('./routes/blogRoutes');
 const { createTable } = require('./models/postModel');
 
-(async () => {  await createTable(); })();
 dotenv.config();
 
 const app = express();
@@ -25,12 +24,25 @@ app.use((req, res) => {
   res.status(404).render('404', { title: 'Not Found | frionode' });
 });
 
-// crazy errors
+// error handler
 app.use((err, req, res, next) => {
   console.error(err);
-  res.status(500).send('You suck at codding');
+  res.status(500).send('Internal server error');
 });
 
-app.listen(PORT, () => {
-  console.log(`blog.frionode.online running on http://localhost:${PORT}`);
-});
+// START SERVER ONLY AFTER DB READY
+async function start() {
+  try {
+    await createTable();
+
+    app.listen(PORT, () => {
+      console.log(`blog.frionode.online running on http://localhost:${PORT}`);
+    });
+
+  } catch (err) {
+    console.error('Startup failed:', err);
+    process.exit(1);
+  }
+}
+
+start();

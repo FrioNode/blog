@@ -1,12 +1,12 @@
-const sqlite3 = require('sqlite3');
-const { open } = require('sqlite');
+const Database = require('better-sqlite3');
 const path = require('path');
 
-async function initDB() {
-  return open({
-    filename: path.join(__dirname, '../database.sqlite'),
-    driver: sqlite3.Database,
-  });
-}
+const isProd = process.env.NODE_ENV === 'production';
 
-module.exports = initDB;
+const dbPath = isProd
+? '/data/sqlite.db'
+: path.join(__dirname, '../database.sqlite');
+
+const db = new Database(dbPath);
+
+module.exports = db;
