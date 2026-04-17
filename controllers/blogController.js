@@ -4,8 +4,8 @@ const posts = [
     id: 1,
     title: 'Day 0: Why I Am Building In Public',
     slug: 'day-0-building-in-public',
-    excerpt: 'A solo dev in Nairobi. No team, no funding, just a laptop and a vision. This is where I document everything — the wins, the bugs, the lessons.',
-    date: 'April 17, 2025',
+    excerpt: 'A solo dev in Nakuru. No team, no funding, just a laptop and a vision. This is where I document everything — the wins, the bugs, the lessons.',
+    date: 'April 17, 2026',
     tag: 'Journal',
   }
 ];
