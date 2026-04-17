@@ -1,23 +1,19 @@
-// Placeholder data — will be replaced with DB later
-const posts = [
-  {
-    id: 1,
-    title: 'Day 0: Why I Am Building In Public',
-    slug: 'day-0-building-in-public',
-    excerpt: 'A solo dev in Nakuru. No team, no funding, just a laptop and a vision. This is where I document everything — the wins, the bugs, the lessons.',
-    date: 'April 17, 2026',
-    tag: 'Journal',
-  }
-];
+const initDB = require('../config/db');
 
-exports.index = (req, res) => {
+exports.index = async (req, res) => {
+  const db = await initDB();
+  const posts = await db.all('SELECT * FROM posts ORDER BY id DESC');
+
   res.render('index', {
     title: 'frionode | building in public',
     posts,
   });
 };
 
-exports.blog = (req, res) => {
+exports.blog = async (req, res) => {
+  const db = await initDB();
+  const posts = await db.all('SELECT * FROM posts ORDER BY id DESC');
+
   res.render('blog', {
     title: 'Blog | frionode',
     posts,

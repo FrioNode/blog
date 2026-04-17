@@ -1,6 +1,11 @@
 const express = require('express');
+const dotenv = require('dotenv');
 const path = require('path');
 const blogRoutes = require('./routes/blogRoutes');
+const { createTable } = require('./models/postModel');
+
+(async () => {  await createTable(); })();
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -18,6 +23,12 @@ app.use('/', blogRoutes);
 // 404 fallback
 app.use((req, res) => {
   res.status(404).render('404', { title: 'Not Found | frionode' });
+});
+
+// crazy errors
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).send('You suck at codding');
 });
 
 app.listen(PORT, () => {
