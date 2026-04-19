@@ -12,7 +12,7 @@ primary_region = 'ams'
   source = 'data'
   destination = '/data'
   auto_extend_size_threshold = 90
-  auto_extend_size_increment = '256MB'
+  auto_extend_size_increment = '1GB'
   auto_extend_size_limit = '2GB'
 
 [http_service]
