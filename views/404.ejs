@@ -1,2 +1,22 @@
-<h1>404 - Not Found</h1>
-<p>Page does not exist.</p>
+<!DOCTYPE html>
+<html lang="en">
+<head><%- include('partials/head') %></head>
+<body>
+  <nav class="nav">
+    <a href="/" class="nav__logo">frionode<span class="blink">_</span></a>
+  </nav>
+
+  <main style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:4rem 2rem; text-align:center;">
+    <div class="hero__tag">[ error ]</div>
+    <h1 class="glitch" data-text="404">404</h1>
+    <p style="color:var(--text-muted); font-size:0.9rem; margin:1.5rem 0 0.5rem; max-width:380px; line-height:1.8;">
+      this page doesn't exist. you either mistyped something or followed a broken link.
+    </p>
+    <p style="color:#444; font-size:0.78rem; margin-bottom:2.5rem;">classic.</p>
+    <a href="/" class="btn">go home →</a>
+  </main>
+
+  <%- include('partials/footer') %>
+  <script src="/js/main.js"></script>
+</body>
+</html>

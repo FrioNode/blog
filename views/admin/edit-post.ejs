@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><%- include('../partials/head') %>
+</head>
+<body>
+  <nav class="nav">
+    <a href="/" class="nav__logo">frionode<span class="blink">_</span></a>
+    <ul class="nav__links">
+      <li><a href="/admin/dashboard">← dashboard</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <section class="page__header">
+      <div class="hero__tag">[ admin / edit ]</div>
+      <h1 class="page__title">edit post</h1>
+    </section>
+
+    <section style="padding: 3rem 0;">
+      <% if (error) { %>
+        <div class="form__error"><%= error %></div>
+      <% } %>
+
+      <form action="/admin/posts/update/<%= post.id %>" method="POST" class="admin__form">
+        <div class="form__group">
+          <label>title</label>
+          <input type="text" name="title" required value="<%= post.title %>" />
+        </div>
+
+        <div class="form__group">
+          <label>tag</label>
+          <select name="tag">
+            <% ['Journal','Dev Log','Lesson','Milestone','Rant'].forEach(t => { %>
+              <option value="<%= t %>" <%= post.tag === t ? 'selected' : '' %>><%= t %></option>
+            <% }) %>
+          </select>
+        </div>
+
+        <div class="form__group">
+          <label>excerpt</label>
+          <textarea name="excerpt" rows="2"><%= post.excerpt %></textarea>
+        </div>
+
+        <div class="form__group">
+          <label>content</label>
+          <textarea name="content" rows="20"><%= post.content %></textarea>
+        </div>
+
+        <div class="form__actions">
+          <button type="submit" class="btn">save changes →</button>
+          <a href="/admin/dashboard" class="btn btn--ghost">cancel</a>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

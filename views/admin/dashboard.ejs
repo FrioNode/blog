@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><%- include('../partials/head') %>
+<link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <nav class="nav">
+    <a href="/" class="nav__logo">frionode<span class="blink">_</span></a>
+    <ul class="nav__links">
+      <li><a href="/admin/dashboard">dashboard</a></li>
+      <li><a href="/admin/posts/new" class="btn" style="padding:0.4rem 1rem;">+ new post</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <section class="page__header">
+      <div class="hero__tag">[ admin ]</div>
+      <h1 class="page__title">dashboard</h1>
+      <p class="page__sub"><%= posts.length %> post<%= posts.length !== 1 ? 's' : '' %> total</p>
+    </section>
+
+    <section style="padding: 3rem 0;">
+      <% if (posts.length === 0) { %>
+        <div class="empty__state">
+          <p>no posts yet. <a href="/admin/posts/new">write the first one →</a></p>
+        </div>
+      <% } else { %>
+        <table class="admin__table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>title</th>
+              <th>tag</th>
+              <th>date</th>
+              <th>actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% posts.forEach(post => { %>
+            <tr>
+              <td class="muted"><%= post.id %></td>
+              <td><a href="/blog/<%= post.slug %>" target="_blank"><%= post.title %></a></td>
+              <td><span class="post__tag"><%= post.tag %></span></td>
+              <td class="muted"><%= post.date %></td>
+              <td class="actions">
+                <a href="/admin/posts/edit/<%= post.id %>" class="action__btn">edit</a>
+                <form action="/admin/posts/delete/<%= post.id %>" method="POST"
+                  onsubmit="return confirm('delete this post?')">
+                  <button type="submit" class="action__btn action__btn--danger">delete</button>
+                </form>
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      <% } %>
+    </section>
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

@@ -1,5 +1,141 @@
-<h1>Blog Page</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head><%- include('partials/head') %></head>
+<body>
+  <%- include('partials/navbar') %>
 
-<% posts.forEach(post => { %>
-  <h2><%= post.title %></h2>
-<% }) %>
+  <main>
+    <section class="page__header">
+      <div class="hero__tag">[ the diary ]</div>
+      <h1 class="page__title">blog</h1>
+      <p class="page__sub">raw build logs. updated as i go.</p>
+    </section>
+
+    <!-- CONTROLS -->
+    <div class="blog__controls">
+      <input
+        type="text"
+        id="searchInput"
+        class="blog__search"
+        placeholder="search posts..."
+        autocomplete="off"
+      />
+      <div class="blog__filters">
+        <button class="filter__btn active" data-tag="all">all</button>
+        <button class="filter__btn" data-tag="Journal">journal</button>
+        <button class="filter__btn" data-tag="Dev Log">dev log</button>
+        <button class="filter__btn" data-tag="Lesson">lesson</button>
+        <button class="filter__btn" data-tag="Milestone">milestone</button>
+        <button class="filter__btn" data-tag="Rant">rant</button>
+      </div>
+    </div>
+
+    <!-- POSTS LIST -->
+    <div class="blog__empty" id="emptyState" style="display:none;">
+      <p>no posts found. try a different search or filter.</p>
+    </div>
+
+    <div class="blog__list" id="postList">
+      <% posts.forEach(post => { %>
+      <article class="blog__post" data-tag="<%= post.tag %>">
+        <div class="blog__post__meta">
+          <span class="post__tag"><%= post.tag %></span>
+          <span class="blog__post__date"><%= post.date %></span>
+        </div>
+        <h2 class="blog__post__title"><%= post.title %></h2>
+        <p class="blog__post__excerpt"><%= post.excerpt %></p>
+
+        <div class="blog__post__body__wrap" data-expanded="false">
+          <div class="blog__post__body">
+            <%- post.content.replace(/\n/g, '<br/>') %>
+          </div>
+          <div class="blog__post__fade"></div>
+        </div>
+
+        <button class="blog__post__expand btn btn--ghost">
+          continue reading ↓
+        </button>
+      </article>
+      <% }) %>
+    </div>
+
+    <div class="blog__loadmore" id="loadMoreWrap" style="display:none;">
+      <button class="btn btn--ghost" id="loadMoreBtn">load more →</button>
+    </div>
+
+  </main>
+
+  <%- include('partials/footer') %>
+
+  <script>
+    const POSTS_PER_PAGE = 5;
+    let currentPage = 1;
+    let activeTag = 'all';
+    let searchQuery = '';
+
+    const allPosts = Array.from(document.querySelectorAll('.blog__post'));
+    const emptyState = document.getElementById('emptyState');
+    const loadMoreWrap = document.getElementById('loadMoreWrap');
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+
+    function getFiltered() {
+      return allPosts.filter(post => {
+        const tag = post.dataset.tag;
+        const text = post.innerText.toLowerCase();
+        const matchTag = activeTag === 'all' || tag === activeTag;
+        const matchSearch = text.includes(searchQuery.toLowerCase());
+        return matchTag && matchSearch;
+      });
+    }
+
+    function render() {
+      const filtered = getFiltered();
+      const visible = filtered.slice(0, currentPage * POSTS_PER_PAGE);
+
+      allPosts.forEach(p => p.style.display = 'none');
+      visible.forEach(p => p.style.display = 'block');
+
+      emptyState.style.display = filtered.length === 0 ? 'block' : 'none';
+      loadMoreWrap.style.display = filtered.length > visible.length ? 'flex' : 'none';
+    }
+
+    // filter buttons
+    document.querySelectorAll('.filter__btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter__btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeTag = btn.dataset.tag;
+        currentPage = 1;
+        render();
+      });
+    });
+
+    // search
+    document.getElementById('searchInput').addEventListener('input', e => {
+      searchQuery = e.target.value;
+      currentPage = 1;
+      render();
+    });
+
+    // load more
+    loadMoreBtn.addEventListener('click', () => {
+      currentPage++;
+      render();
+    });
+
+    // expand / collapse post
+    document.querySelectorAll('.blog__post__expand').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const wrap = btn.previousElementSibling;
+        const expanded = wrap.dataset.expanded === 'true';
+        wrap.dataset.expanded = !expanded;
+        wrap.querySelector('.blog__post__fade').style.display = expanded ? 'block' : 'none';
+        wrap.style.maxHeight = expanded ? '180px' : 'none';
+        btn.textContent = expanded ? 'continue reading ↓' : 'collapse ↑';
+      });
+    });
+
+    render();
+  </script>
+</body>
+</html>

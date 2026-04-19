@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><%- include('../partials/head') %>
+<link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <nav class="nav">
+    <a href="/" class="nav__logo">frionode<span class="blink">_</span></a>
+    <ul class="nav__links">
+      <li><a href="/admin/dashboard">← dashboard</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <section class="page__header">
+      <div class="hero__tag">[ admin / new ]</div>
+      <h1 class="page__title">new post</h1>
+    </section>
+
+    <section style="padding: 3rem 0;">
+      <% if (error) { %>
+        <div class="form__error"><%= error %></div>
+      <% } %>
+
+      <form action="/admin/posts/create" method="POST" class="admin__form">
+        <div class="form__group">
+          <label>title</label>
+          <input type="text" name="title" required placeholder="Day 1: The Plan..." />
+        </div>
+
+        <div class="form__group">
+          <label>tag</label>
+          <select name="tag">
+            <option value="Journal">Journal</option>
+            <option value="Dev Log">Dev Log</option>
+            <option value="Lesson">Lesson</option>
+            <option value="Milestone">Milestone</option>
+            <option value="Rant">Rant</option>
+          </select>
+        </div>
+
+        <div class="form__group">
+          <label>excerpt <span class="muted">(shows on listing)</span></label>
+          <textarea name="excerpt" rows="2" placeholder="One sentence that makes someone want to read..."></textarea>
+        </div>
+
+        <div class="form__group">
+          <label>content</label>
+          <textarea name="content" rows="20" placeholder="Write freely..."></textarea>
+        </div>
+
+        <div class="form__actions">
+          <button type="submit" class="btn">publish post →</button>
+          <a href="/admin/dashboard" class="btn btn--ghost">cancel</a>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

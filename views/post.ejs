@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><%- include('partials/head') %>
+</head>
+<body>
+  <%- include('partials/navbar') %>
+
+  <main>
+    <article class="post__full">
+      <header class="post__full__header">
+        <div class="hero__tag">[ <%= post.tag %> ]</div>
+        <h1 class="post__full__title"><%= post.title %></h1>
+        <div class="post__full__meta">
+          <span><%= post.date %></span>
+          <span>·</span>
+          <a href="/blog">← all posts</a>
+        </div>
+      </header>
+
+      <div class="post__full__body">
+        <%- post.content.replace(/\n/g, '<br/>') %>
+      </div>
+    </article>
+  </main>
+
+  <%- include('partials/footer') %>
+  <script src="/js/main.js"></script>
+</body>
+</html>

@@ -1,8 +1,10 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const path = require('path');
-const blogRoutes = require('./routes/blogRoutes');
 const { createTable } = require('./models/postModel');
+const session = require('express-session');
+const blogRoutes = require('./routes/blogRoutes')
+const adminRoutes = require('./routes/adminRoutes');
 
 dotenv.config();
 
@@ -16,8 +18,18 @@ app.set('views', path.join(__dirname, 'views'));
 // Static files
 app.use(express.static(path.join(__dirname, 'public')));
 
+// middleares
+app.use(express.urlencoded({ extended: true }));
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: { maxAge: 1000 * 60 * 60 * 8 }
+}));
+
 // Routes
 app.use('/', blogRoutes);
+app.use('/admin', adminRoutes)
 
 // 404 fallback
 app.use((req, res) => {
