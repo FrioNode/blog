@@ -1,49 +1,47 @@
 # syntax = docker/dockerfile:1
 
-ARG NODE_VERSION=22.21.1
+ARG NODE_VERSION=20.11.1
 FROM node:${NODE_VERSION}-slim AS base
 
 LABEL fly_launch_runtime="Node.js"
 
 WORKDIR /app
-ENV NODE_ENV="production"
+ENV NODE_ENV=production
 
-ARG PNPM_VERSION=latest
-RUN npm install -g pnpm@$PNPM_VERSION
+RUN npm install -g pnpm
 
 
 # ---------------- BUILD STAGE ----------------
 FROM base AS build
 
-RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y \
+RUN apt-get update -qq && apt-get install -y \
     build-essential \
-    python-is-python3 \
-    pkg-config \
-    node-gyp
+    python3 \
+    pkg-config
 
 COPY package.json pnpm-lock.yaml ./
+
+# install all deps (needed for native build)
 RUN pnpm install --frozen-lockfile
 
 COPY . .
 
-# 🔥 CRITICAL: rebuild native modules for target env
+# force native rebuild for sqlite
 RUN pnpm rebuild better-sqlite3
 
 
-# ---------------- FINAL STAGE ----------------
-FROM base
-
-COPY --from=build /app /app
+# ---------------- PRODUCTION STAGE ----------------
+FROM base AS runner
 
 WORKDIR /app
 
-# ensure runtime can use sqlite file
+COPY --from=build /app /app
+
+# ensure runtime folder exists
 RUN mkdir -p /data
-VOLUME /data
+
+ENV DB_PATH=/data/sqlite.db
 
 EXPOSE 3000
 
-ENV DB_PATH="/data/sqlite.db"
-
-CMD ["pnpm", "run", "start"]
+CMD ["pnpm", "start"]
